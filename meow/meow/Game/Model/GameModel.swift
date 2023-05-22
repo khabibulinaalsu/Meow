@@ -14,7 +14,7 @@ enum catType: String {
 
 struct Cat {
     var pattern: [Int]
-    let type: catType
+    var type: catType
     
     init(type: catType) {
         self.pattern = []

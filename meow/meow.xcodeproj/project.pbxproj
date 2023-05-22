@@ -27,6 +27,8 @@
 		FDA062232A0C48DA00EA5DB9 /* loud.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FDA062212A0C48DA00EA5DB9 /* loud.mp3 */; };
 		FDA062252A0C4D1D00EA5DB9 /* AddCat.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA062242A0C4D1D00EA5DB9 /* AddCat.swift */; };
 		FDA062272A0C50D000EA5DB9 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA062262A0C50D000EA5DB9 /* Position.swift */; };
+		FDA4EAD42A1AB77300087BEB /* MakePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA4EAD32A1AB77300087BEB /* MakePattern.swift */; };
+		FDA4EAD62A1B932E00087BEB /* Nota.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA4EAD52A1B932E00087BEB /* Nota.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,8 @@
 		FDA062212A0C48DA00EA5DB9 /* loud.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = loud.mp3; sourceTree = "<group>"; };
 		FDA062242A0C4D1D00EA5DB9 /* AddCat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCat.swift; sourceTree = "<group>"; };
 		FDA062262A0C50D000EA5DB9 /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		FDA4EAD32A1AB77300087BEB /* MakePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakePattern.swift; sourceTree = "<group>"; };
+		FDA4EAD52A1B932E00087BEB /* Nota.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nota.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +119,7 @@
 				FDA0621C2A0C41C000EA5DB9 /* Screen */,
 				FDA0621D2A0C41CD00EA5DB9 /* Scene */,
 				FDA0621E2A0C41E200EA5DB9 /* Model */,
+				FDA4EAD72A1BD49F00087BEB /* CollectionCell */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -150,6 +155,7 @@
 			children = (
 				FDA061F92A0AA15500EA5DB9 /* GameController.swift */,
 				FDA062242A0C4D1D00EA5DB9 /* AddCat.swift */,
+				FDA4EAD32A1AB77300087BEB /* MakePattern.swift */,
 			);
 			path = Screen;
 			sourceTree = "<group>";
@@ -179,6 +185,14 @@
 				FDA062212A0C48DA00EA5DB9 /* loud.mp3 */,
 			);
 			path = sounds;
+			sourceTree = "<group>";
+		};
+		FDA4EAD72A1BD49F00087BEB /* CollectionCell */ = {
+			isa = PBXGroup;
+			children = (
+				FDA4EAD52A1B932E00087BEB /* Nota.swift */,
+			);
+			path = CollectionCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,6 +272,7 @@
 				FDA061E02A057CB500EA5DB9 /* ViewController.swift in Sources */,
 				FDA062032A0ADCCF00EA5DB9 /* CatUnit.swift in Sources */,
 				FDA062182A0C2B6200EA5DB9 /* GameName.swift in Sources */,
+				FDA4EAD62A1B932E00087BEB /* Nota.swift in Sources */,
 				FDA061FD2A0AA26F00EA5DB9 /* GameModel.swift in Sources */,
 				FDA062272A0C50D000EA5DB9 /* Position.swift in Sources */,
 				FDA061F42A080ED300EA5DB9 /* LoadCell.swift in Sources */,
@@ -268,6 +283,7 @@
 				FDA062162A0C27FF00EA5DB9 /* RootViewController.swift in Sources */,
 				FDA061DE2A057CB500EA5DB9 /* SceneDelegate.swift in Sources */,
 				FDA061F82A0A93D900EA5DB9 /* NameNewGame.swift in Sources */,
+				FDA4EAD42A1AB77300087BEB /* MakePattern.swift in Sources */,
 				FDA062142A0C277300EA5DB9 /* Router.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

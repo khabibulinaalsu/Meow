@@ -6,11 +6,12 @@ final class CatUnit: SKScene {
     private var cat = SKSpriteNode()
     private var catMovingFrames: [SKTexture] = []
     private var sound: SKAudioNode
-    var isEnabled = true
+    var isNotStarted = true
     
     init(cat: Cat, size: CGSize) {
         self.catInfo = cat
         self.sound = SKAudioNode(fileNamed: "\(cat.type).mp3")
+        self.sound.isPositional = true
         super.init(size: size)
     }
     
@@ -28,18 +29,16 @@ final class CatUnit: SKScene {
             catMovingFrames.append(SKTexture(imageNamed: frameName))
         }
         cat = SKSpriteNode(imageNamed: "cat\(catInfo.type)1")
-        
-        // TODO: position and size
         cat.position = CGPoint(x: size.width / 2.0, y: size.height / 2.0)
         cat.scale(to: CGSize(width: size.width, height: size.height))
-        
         addChild(cat)
-        sound.speed = 3
-        cat.addChild(sound)
-        sound.run(SKAction.pause())
     }
     
-    func animateCat() {
+    func singCat() {
+        if isNotStarted {
+            cat.addChild(sound)
+            isNotStarted = false
+        }
         sound.run(SKAction.play())
         cat.run(
             SKAction.animate(
@@ -51,5 +50,26 @@ final class CatUnit: SKScene {
                 self.sound.run(SKAction.pause())
             }
         )
+    }
+    
+    func animateCat() {
+        if !isNotStarted {
+            sound.removeFromParent()
+            isNotStarted = true
+        }
+        cat.run(
+            SKAction.repeatForever(
+                SKAction.animate(
+                    with: self.catMovingFrames,
+                    timePerFrame: 0.1,
+                    resize: false,
+                    restore: true
+                )
+            )
+        )
+    }
+    
+    func stopAll() {
+        cat.removeAllActions()
     }
 }

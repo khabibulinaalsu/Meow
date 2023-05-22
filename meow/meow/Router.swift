@@ -2,17 +2,18 @@ import Foundation
 
 final class Router {
     
-    let rootViewController: RootViewController
-    var loadController = LoadGameController(dataSource: GameName())
-    var game: GameController? {
+    private let rootViewController: RootViewController
+    private var loadController = LoadGameController(dataSource: GameName())
+    private var currentCat: AddCatController?
+    private var game: GameController? {
         didSet {
             setupButtons()
         }
     }
     
     init(rootViewController: RootViewController) {
-            self.rootViewController = rootViewController
-        }
+        self.rootViewController = rootViewController
+    }
     
     func start() {
         toLoadView()
@@ -59,10 +60,25 @@ final class Router {
     }
     
     private func changeCat(position: Position, cat: Cat?) {
-        let controller = AddCatController(position: position, cat: cat)
-        controller.returnToMain = { [weak self] position, cat in
-            self?.game?.session.updateCat(num: position.num, for: cat)
-            self?.game?.setupCurrentPosition(position.num)
+        self.currentCat = AddCatController(position: position, cat: cat)
+        if let cc = self.currentCat {
+            cc.returnToMain = { [weak self] position, cat in
+                self?.game?.session.updateCat(num: position.num, for: cat)
+                self?.game?.setupCurrentPosition(position.num)
+                self?.rootViewController.popViewController(animated: true)
+                //self?.game?.runAudio()
+            }
+            cc.openMakePattern = { [weak self] pattern in
+                self?.toMakePattern(position: position.num, pattern: pattern)
+            }
+            self.rootViewController.pushViewController(cc, animated: true)
+        }
+    }
+    
+    private func toMakePattern(position: Int, pattern: [Int]) {
+        let controller = MakePatternController(pattern: pattern)
+        controller.save = { [weak self] patt in
+            self?.currentCat?.cat?.pattern = patt
             self?.rootViewController.popViewController(animated: true)
         }
         self.rootViewController.pushViewController(controller, animated: true)

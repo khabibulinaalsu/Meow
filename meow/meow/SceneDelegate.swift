@@ -9,16 +9,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        
+
         let rvc = RootViewController()
         self.router = Router(rootViewController: rvc)
         window.rootViewController = rvc
         self.window = window
         router?.start()
-        /*
-        window.rootViewController = UINavigationController(rootViewController: AddCatController(position: Position(frame: .zero, num: 1), cat: nil))
+/*
+        window.rootViewController = MakePatternController(pattern: [0, 1, 5, 9])
         self.window = window
-         */
+  */
         window.makeKeyAndVisible()
     }
 

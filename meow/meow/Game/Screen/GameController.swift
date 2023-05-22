@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 import SpriteKit
 
 final class GameController: UIViewController {
@@ -11,6 +12,8 @@ final class GameController: UIViewController {
     private var cats: [Int:CatUnit] = [:]
     private let playButton = UIButton(type: .system)
     private var isPlaying: Bool = false
+    private var listener = SKNode()
+    private var audioWork: DispatchWorkItem?
     
     init(session: Session) {
         self.session = session
@@ -26,6 +29,8 @@ final class GameController: UIViewController {
         view.backgroundColor = .systemBackground
         setupPositions()
         setupPlayButton()
+        setupListener()
+        //runAudio()
     }
     
     override var shouldAutorotate: Bool {
@@ -76,6 +81,11 @@ final class GameController: UIViewController {
     func setupCurrentPosition(_ position: Int) {
         let pos = positions[position-1]
         pos.removeFromSuperview()
+        for sub in self.view.subviews {
+            if sub.frame == pos.frame {
+                sub.removeFromSuperview()
+            }
+        }
         let view = SKView(frame: pos.frame)
         let cat = session.curSes[position]
         if let cat = cat {
@@ -85,11 +95,6 @@ final class GameController: UIViewController {
             view.presentScene(unit)
             cats[position] = unit
         } else {
-            for sub in self.view.subviews {
-                if sub.frame == pos.frame {
-                    sub.removeFromSuperview()
-                }
-            }
             cats[position] = nil
         }
         view.backgroundColor = .clear
@@ -97,18 +102,61 @@ final class GameController: UIViewController {
         pos.backgroundColor = .clear
     }
     
-    private func runAudio() {
-        for (_, unit) in self.cats {
-            unit.run(SKAction.repeatForever(SKAction.run {
-                unit.animateCat()
-            }))
+    func runAudio() {
+        let nok = countNok()
+        var j = 0
+        audioWork = DispatchWorkItem {
+            for (key, cat) in self.session.curSes {
+                let lenPattern = self.countLen(cat: cat)
+                let x = j % lenPattern
+                if cat.pattern.contains(x) {
+                    self.cats[key]?.singCat()
+                }
+            }
+            j += 1
         }
+        for i in 0..<nok {
+            if let audioWork = audioWork {
+                DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.3, execute: audioWork)
+            }
+        }
+        /*
+        for (_, unit) in self.cats {
+            unit.animateCat()
+        }
+         */
+    }
+    
+    private func countNok() -> Int {
+        return 90
+    }
+    
+    private func countLen(cat: Cat) -> Int {
+        let x: Int = (cat.pattern.max() ?? 9) / 10
+        return (x + 1) * 10
     }
     
     private func stopAudio() {
+        audioWork?.cancel()
         for (_, unit) in self.cats {
-            unit.removeAllActions()
+            unit.stopAll()
         }
+    }
+    
+    private func setupListener() {
+        listener.position = view.center
+        let skview = SKView()
+        view.addSubview(skview)
+        skview.translatesAutoresizingMaskIntoConstraints = false
+        skview.heightAnchor.constraint(equalTo: skview.widthAnchor).isActive = true
+        skview.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        skview.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        skview.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        let scene = SKScene()
+        skview.presentScene(scene)
+        skview.backgroundColor = .clear
+        scene.backgroundColor = .clear
+        scene.addChild(listener)
     }
     
     private func setupPlayButton() {
@@ -118,9 +166,9 @@ final class GameController: UIViewController {
         playButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true
         playButton.widthAnchor.constraint(equalTo: playButton.heightAnchor).isActive = true
         playButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        playButton.backgroundColor = .systemGray4
+        playButton.backgroundColor = .systemBackground // .systemGray4
         playButton.layer.cornerRadius = 20
-        playButton.setTitle(">", for: .normal)
+        playButton.setTitle("", for: .normal)
         playButton.setTitleColor(.label, for: .normal)
         playButton.titleLabel?.font = .systemFont(ofSize: 24, weight: .bold)
         playButton.addTarget(self, action: #selector(playMusic), for: .touchUpInside)
@@ -139,6 +187,7 @@ final class GameController: UIViewController {
     
     @objc
     private func openChange(_ sender: Position) {
+        stopAudio()
         changeCat?(sender, session.curSes[sender.num])
     }
 }

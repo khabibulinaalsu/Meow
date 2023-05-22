@@ -17,6 +17,7 @@ final class AddCatController: UIViewController {
     private let types: [catType] = [.normal, .loud]
     
     var returnToMain: ((Position, Cat?) -> Void)?
+    var openMakePattern: (([Int]) -> Void)?
     
     // TODO: changePlace button
     // private var changePlaceButton = UIButton(type: .system)
@@ -52,10 +53,10 @@ final class AddCatController: UIViewController {
             catSKView.centerXAnchor.constraint(equalTo: catView.centerXAnchor).isActive = true
             catSKView.widthAnchor.constraint(equalToConstant: 0.3 * view.frame.width).isActive = true
             let size = CGSize(width: 0.3 * view.frame.width, height: 0.3 * view.frame.width)
-            self.cat = Cat(type: .normal)
-            catSKView.presentScene(CatUnit(cat: cat ?? Cat(type: .normal), size: size))
-            //kotiska.run(SKAction.play())
+            let kotiska = CatUnit(cat: cat ?? Cat(type: .normal), size: size)
+            catSKView.presentScene(kotiska)
             catSKView.backgroundColor = .clear
+            kotiska.animateCat()
         } else {
             catSKView.removeFromSuperview()
         }
@@ -171,12 +172,13 @@ final class AddCatController: UIViewController {
     
     @objc
     private func changePattern(_ sender: UIButton) {
-        
+        if cat != nil {
+            openMakePattern?(cat?.pattern ?? [])
+        }
     }
     
     @objc
     private func deleteCat(_ sender: UIButton) {
-        // убрать выделение с коллекшн вью
         position.isOccupied = false
         cat = nil
         updateView()
@@ -233,5 +235,16 @@ extension AddCatController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 10
+    }
+}
+
+extension AddCatController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+        let type = types[indexPath.row]
+        if cat == nil {
+            cat = Cat(type: type)
+        } else {
+            cat?.type = type
+        }
     }
 }
